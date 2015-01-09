@@ -1,0 +1,25 @@
+[
+    {
+        "name": "Name 1",
+        "address": "123 Address Street",
+        "phone_number": "787-544-5656"
+    },
+    
+    {
+        "name": "Denial",
+        "address": "911 WallStreet",
+        "phone_number": "121-123-1234"
+    },
+    
+    {
+        "name": "Fiorenzo",
+        "address": "Boston, MA",
+        "phone_number": "777-877-8797"
+    },
+    
+    {
+        "name": "New Person",
+        "address": "New Address Location",
+        "phone_number": "654-178-8765"
+    }
+]

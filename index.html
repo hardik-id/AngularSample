@@ -1,0 +1,153 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Sample Application</title>
+
+<!-- Import jQuery -->
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+
+<!-- Import AngularJS library -->
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.8/angular.min.js"></script>
+
+<!-- Import Booststrap -->
+<link href="dist/css/bootstrap.min.css" rel="stylesheet">
+<script src="dist/js/bootstrap.min.js"></script>
+
+<!-- Import application specific code -->
+<script type="text/javascript" src="js/demo.js"></script>
+<link href="css/demo.css" rel="stylesheet" type="text/css">
+</head>
+
+<body>
+
+    <!-- Defines Angular Application Module -->
+    <div ng-app="userApp" class="container">
+        <div class="page-header">
+            <h1>Welcome to Sample Application!</h1>
+        </div>
+        <!-- Deines Controller -->
+        <div ng-controller="UserCtrl" ng-switch on="tabs">
+            <ul class="nav nav-tabs">
+                <li ng-class="tabs=='Simple' ? 'active' : ''" ng-click="tabs='Simple'"><a href="">Simple</a></li>
+                <li ng-class="tabs=='Complex' ? 'active' : ''" ng-click="tabs='Complex'"><a href="">Complex</a></li>
+                <li ng-class="tabs=='Filter' ? 'active' : ''" ng-click="tabs='Filter'"><a href="">Filter</a></li>
+            </ul>
+            <br />
+            <div class="panel panel-primary" ng-switch-when="Simple">
+                <div class="panel-heading"> <h3 class="panel-title">Two Way DATA Binding Directive DEMO:</h3> </div>
+                <div class="panel-body">
+                    <div class="container-fluid">
+                        <h3><input type="text" class="form-control" ng-model='SimpleName' ng-init="SimpleName = 'Initial Name'"></h3>
+                        <hr/>
+                        <dl class="dl-horizontal">
+                            <dt>((SimpleName))</dt> <dd>{{ SimpleName }}</dd>
+                            <dt>ng-bind</dt>        <dd><span ng-bind="SimpleName"></span></dd>
+                            <dt>ng:bind</dt>        <dd><span ng:bind="SimpleName"></span></dd>
+                            <dt>ng_bind</dt>        <dd><span ng_bind="SimpleName"></span></dd>
+                            <dt>data-ng-bind</dt>   <dd><span data-ng-bind="SimpleName"></span></dd>
+                            <dt>x-ng-bind</dt>      <dd><span x-ng-bind="SimpleName"></span></dd>
+                        </dl>
+                    </div>
+                </div>
+            </div>
+
+                        
+            <div class="panel panel-primary" ng-switch-when="Complex">
+                <div class="panel-heading"> <h3 class="panel-title"> CRUD Example </h3> </div>
+
+                <table class="table table-hover">
+                    <thead>
+                        <th>Name</th>
+                        <th>Address</th>
+                        <th>Phone Number</th>
+                        <th></th>
+                        <th ng-if="users.length > 0"></th>
+                    </thead>
+
+                    <tbody ng-repeat="user in users" ng-switch on="user.state">
+
+                        <!-- Edit Mode -->
+                        <tr ng-switch-when="edit">
+                            <td>
+                                <form novalidate name="edit">
+                                    <input type="text" class="form-control" ng-model="user.name" required />
+                                </form>
+                            </td>
+                            <td> <input type="text" class="form-control" ng-model="user.address" /> </td>
+                            <td> <input type="text" class="form-control" ng-model="user.phone_number" /> </td>
+                            <td> 
+                                <input type="button" class="btn btn-success" ng-click="edit.$valid && saveUser(user);" value="Save" /> 
+                            </td>
+                            <td> 
+                                <input type="button" class="btn btn-danger" ng-click="cancelEdit(user);" value="Cancel" />
+                            </td>
+                        </tr>
+
+                        <!-- Deleted Mode -->
+                        <tr class="danger" ng-switch-when="deleted">
+                            <td>{{user.name}}</td>
+                            <td>{{user.address}}</td>
+                            <td>{{user.phone_number}}</td>
+                            <td>
+                                <input type="button" class="btn btn-danger" ng-click="deleteUser(user);" value="Delete Permanently" /> 
+                            </td>
+                            <td>
+                                <input type="button" class="btn btn-success" ng-click="undoDelete(user)" value="Undo" />
+                            </td>
+                        </tr>
+
+                        <!-- Normal Mode -->
+                        <tr ng-switch-default>
+                            <td>{{user.name}}</td>
+                            <td>{{user.address}}</td>
+                            <td>{{user.phone_number}}</td>
+                            <td>
+                                <input type="button" class="btn btn-primary" ng-click="editUser(user);" value="Edit" />
+                            </td>
+                            <td>
+                                <input type="button" class="btn btn-danger" ng-click="deleteUser(user);" value="Delete" />
+                            </td>
+                        </tr>
+                    </tbody>
+
+                    <!-- New User Form -->
+                    <tbody>
+                        <tr>
+                            <td><input type="text" class="form-control" ng-model="newUser.name" /></td>
+                            <td><input type="text" class="form-control" ng-model="newUser.address" /></td>
+                            <td><input type="text" class="form-control" ng-model="newUser.phone_number" /></td>
+                            <td><input type="button" class="btn btn-primary" ng-click="addUser();" value="Add" /></td>
+                            <td><input type="button" class="btn btn-danger" ng-click="newUser = null" value="Clear"/></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            
+            
+            <div class="panel panel-primary" ng-switch-when="Filter">
+                <div class="panel-heading"> <h3 class="panel-title">Filter:</h3> </div>
+                <div class="panel-body">
+                    <div class="container-fluid">
+                        <div class="input-group">
+                            <dl class="dl-horizontal">
+                                <dt>Any:</dt>           <dd><input class="form-control" ng-model="search.$"></dd>
+                                <dt>Name only:</dt>      <dd><input class="form-control" ng-model="search.name"></dd>
+                                <dt>Phone only:</dt>     <dd><input class="form-control" ng-model="search.phone_number"></dd>
+                            </dl>
+                        </div>
+                        <table id="searchObjResults" class="table table-hover">
+                          <tr><th>Name</th><th>Address</th><th>Phone</th></tr>
+                          <tr ng-repeat="user in users | filter:search">
+                            <td>{{user.name}}</td>
+                            <td>{{user.address}}</td>
+                            <td>{{user.phone_number}}</td>
+                          </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
